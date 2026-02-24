@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -12,13 +12,102 @@ import {
 import {cocktails, Cocktail} from './src/data/cocktails';
 import CocktailCard from './src/components/CocktailCard';
 import CocktailDetail from './src/components/CocktailDetail';
+import BannerAdComponent from './src/components/BannerAd';
+import mobileAds, {
+  AdEventType,
+  InterstitialAd,
+} from 'react-native-google-mobile-ads';
+import {getInterstitialAdUnitId} from './src/config/ads';
 
 const App = (): React.JSX.Element => {
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCocktail, setSelectedCocktail] = useState<Cocktail | null>(
     null,
   );
+  const [_pendingCocktail, setPendingCocktail] = useState<Cocktail | null>(
+    null,
+  );
+  const [isInterstitialLoaded, setIsInterstitialLoaded] = useState(false);
   const [filterType, setFilterType] = useState<'name' | 'alcohol'>('name');
+
+  const interstitialAdUnitId = useMemo(() => getInterstitialAdUnitId(), []);
+  const interstitial = useMemo(
+    () =>
+      interstitialAdUnitId
+        ? InterstitialAd.createForAdRequest(interstitialAdUnitId, {
+            requestNonPersonalizedAdsOnly: true,
+          })
+        : null,
+    [interstitialAdUnitId],
+  );
+
+  useEffect(() => {
+    mobileAds()
+      .initialize()
+      .catch(() => {
+        // No-op: app should continue even if ads initialization fails.
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!interstitial) {
+      return;
+    }
+
+    const loadedSubscription = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        setIsInterstitialLoaded(true);
+      },
+    );
+
+    const closedSubscription = interstitial.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        setIsInterstitialLoaded(false);
+        interstitial.load();
+
+        setPendingCocktail(currentPendingCocktail => {
+          if (currentPendingCocktail) {
+            setSelectedCocktail(currentPendingCocktail);
+          }
+          return null;
+        });
+      },
+    );
+
+    const errorSubscription = interstitial.addAdEventListener(
+      AdEventType.ERROR,
+      () => {
+        setIsInterstitialLoaded(false);
+        interstitial.load();
+
+        setPendingCocktail(currentPendingCocktail => {
+          if (currentPendingCocktail) {
+            setSelectedCocktail(currentPendingCocktail);
+          }
+          return null;
+        });
+      },
+    );
+
+    interstitial.load();
+
+    return () => {
+      loadedSubscription();
+      closedSubscription();
+      errorSubscription();
+    };
+  }, [interstitial]);
+
+  useEffect(() => {
+    const splashTimer = setTimeout(() => {
+      setIsSplashVisible(false);
+    }, 2500);
+
+    return () => clearTimeout(splashTimer);
+  }, []);
 
   const filteredCocktails = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -43,6 +132,28 @@ const App = (): React.JSX.Element => {
     return Array.from(types).sort();
   }, []);
 
+  const handleCocktailPress = (cocktail: Cocktail) => {
+    if (interstitial && isInterstitialLoaded) {
+      setPendingCocktail(cocktail);
+      interstitial.show();
+      return;
+    }
+
+    setSelectedCocktail(cocktail);
+    interstitial?.load();
+  };
+
+  if (isSplashVisible) {
+    return (
+      <SafeAreaView style={styles.splashContainer}>
+        <StatusBar barStyle="light-content" />
+        <Text style={styles.splashEmoji}>🍸</Text>
+        <Text style={styles.splashTitle}>Emerald Shaker</Text>
+        <Text style={styles.splashTagline}>Mixing classics...</Text>
+      </SafeAreaView>
+    );
+  }
+
   if (selectedCocktail) {
     return (
       <CocktailDetail
@@ -56,14 +167,16 @@ const App = (): React.JSX.Element => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <Text style={styles.title}>Bevvy</Text>
+        <Text style={styles.title}>Emerald Shaker</Text>
         <Text style={styles.subtitle}>100 Classic Cocktails</Text>
       </View>
 
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder={`Search by ${filterType === 'name' ? 'cocktail name' : 'alcohol type'}...`}
+          placeholder={`Search by ${
+            filterType === 'name' ? 'cocktail name' : 'alcohol type'
+          }...`}
           placeholderTextColor="#999"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -128,7 +241,7 @@ const App = (): React.JSX.Element => {
         renderItem={({item}) => (
           <CocktailCard
             cocktail={item}
-            onPress={() => setSelectedCocktail(item)}
+            onPress={() => handleCocktailPress(item)}
           />
         )}
         contentContainerStyle={styles.listContent}
@@ -140,12 +253,35 @@ const App = (): React.JSX.Element => {
           </View>
         }
       />
-      {/* <BannerAdComponent /> */}
+      <BannerAdComponent />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    backgroundColor: '#0f7a47',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  splashEmoji: {
+    fontSize: 72,
+    marginBottom: 16,
+  },
+  splashTitle: {
+    fontSize: 38,
+    fontWeight: '800',
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  splashTagline: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#d6f3e4',
+    letterSpacing: 0.4,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
@@ -250,4 +386,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-

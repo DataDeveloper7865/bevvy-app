@@ -24,6 +24,9 @@ const CocktailCard: React.FC<CocktailCardProps> = ({cocktail, onPress}) => {
           {cocktail.ingredients.slice(0, 3).join(' • ')}
           {cocktail.ingredients.length > 3 ? '...' : ''}
         </Text>
+        <Text style={styles.pairingsPreview} numberOfLines={1}>
+          Pair with: {cocktail.foodPairings.join(' • ')}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -81,7 +84,12 @@ const styles = StyleSheet.create({
     color: '#888',
     lineHeight: 20,
   },
+  pairingsPreview: {
+    marginTop: 8,
+    fontSize: 13,
+    color: '#555',
+    fontWeight: '600',
+  },
 });
 
 export default CocktailCard;
-

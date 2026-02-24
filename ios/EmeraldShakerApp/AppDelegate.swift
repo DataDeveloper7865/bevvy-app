@@ -8,7 +8,7 @@ class AppDelegate: RCTAppDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
-    self.moduleName = "BevvyApp"
+    self.moduleName = "EmeraldShakerApp"
     self.initialProps = [:]
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)

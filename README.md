@@ -1,4 +1,4 @@
-# Bevvy - Cocktail Recipe App
+# Emerald Shaker - Cocktail Recipe App
 
 A React Native iOS app showcasing recipes for 100 classic cocktails. Search by cocktail name or alcohol type to find your perfect drink.
 
@@ -62,7 +62,7 @@ If you're starting fresh, initialize a new React Native project and then copy th
 
 ```bash
 # Initialize a new React Native project
-npx @react-native-community/cli@latest init BevvyApp
+npx @react-native-community/cli@latest init EmeraldShakerApp
 
 # Copy the source files from this project
 # - Copy App.tsx
@@ -111,14 +111,14 @@ npx @react-native-community/cli@latest init BevvyApp
 
 ### iOS Device
 
-1. Open `ios/bevvy-app.xcworkspace` in Xcode
+1. Open `ios/EmeraldShakerApp.xcworkspace` in Xcode
 2. Select your device from the device dropdown
 3. Click the Run button or press `Cmd + R`
 
 ## Project Structure
 
 ```
-bevvy-app/
+emerald-shaker-app/
 ├── App.tsx                 # Main app component
 ├── src/
 │   ├── data/

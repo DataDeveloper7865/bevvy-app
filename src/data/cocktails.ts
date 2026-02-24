@@ -5,9 +5,66 @@ export interface Cocktail {
   ingredients: string[];
   instructions: string;
   glass: string;
+  foodPairings: string[];
 }
 
-export const cocktails: Cocktail[] = [
+type CocktailEntry = Omit<Cocktail, 'foodPairings'>;
+
+const getFoodPairings = (cocktail: CocktailEntry): string[] => {
+  const name = cocktail.name.toLowerCase();
+
+  if (name.includes('bloody mary')) {
+    return ['Bacon and egg sliders', 'Avocado toast'];
+  }
+  if (
+    name.includes('espresso') ||
+    name.includes('irish coffee') ||
+    name.includes('white russian') ||
+    name.includes('black russian')
+  ) {
+    return ['Tiramisu', 'Dark chocolate truffles'];
+  }
+  if (
+    name.includes('piña') ||
+    name.includes('mai tai') ||
+    name.includes('zombie') ||
+    name.includes('hurricane')
+  ) {
+    return ['Jerk chicken skewers', 'Grilled pineapple shrimp tacos'];
+  }
+  if (name.includes('spritz') || name.includes('negroni') || name.includes('americano')) {
+    return ['Marinated olives', 'Prosciutto crostini'];
+  }
+
+  switch (cocktail.alcoholType.toLowerCase()) {
+    case 'whiskey':
+      return ['Smoked brisket sliders', 'Sharp cheddar and crackers'];
+    case 'vodka':
+      return ['Smoked salmon canapes', 'Potato latkes with creme fraiche'];
+    case 'gin':
+      return ['Goat cheese tartlets', 'Lemon-herb roasted chicken bites'];
+    case 'rum':
+      return ['Coconut shrimp', 'Pulled pork sliders'];
+    case 'tequila':
+      return ['Fish tacos', 'Chips with guacamole'];
+    case 'brandy':
+      return ['Mushroom tart', 'Aged gouda'];
+    case 'scotch':
+      return ['Blue cheese crostini', 'Caramelized onion flatbread'];
+    case 'champagne':
+      return ['Oysters', 'Brie with strawberries'];
+    case 'wine':
+      return ['Charcuterie board', 'Margherita flatbread'];
+    case 'mixed':
+      return ['Loaded nachos', 'Buffalo chicken bites'];
+    case 'other':
+      return ['Marcona almonds', 'Citrus-marinated olives'];
+    default:
+      return ['Cheese board', 'Roasted nuts'];
+  }
+};
+
+const cocktailData: CocktailEntry[] = [
   {
     id: '1',
     name: 'Old Fashioned',
@@ -810,3 +867,7 @@ export const cocktails: Cocktail[] = [
   },
 ];
 
+export const cocktails: Cocktail[] = cocktailData.map(cocktail => ({
+  ...cocktail,
+  foodPairings: getFoodPairings(cocktail),
+}));

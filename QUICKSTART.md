@@ -21,7 +21,7 @@ In a temporary directory, create a new React Native project:
 
 ```bash
 cd /tmp
-npx @react-native-community/cli@latest init BevvyTemp
+npx @react-native-community/cli@latest init EmeraldShakerTemp
 ```
 
 Note: If you need TypeScript, you can add it manually after initialization, or the project will prompt you during setup.
@@ -31,22 +31,22 @@ Note: If you need TypeScript, you can add it manually after initialization, or t
 Copy the iOS native project structure to this project:
 
 ```bash
-# From the bevvy-app directory
-cp -r /tmp/BevvyTemp/ios ./ios
+# From the emerald-shaker-app directory
+cp -r /tmp/EmeraldShakerTemp/ios ./ios
 ```
 
 ### Step 3: Update iOS Project Name
 
-The iOS project will be named "BevvyTemp" - you'll need to rename it to "bevvy-app":
+The iOS project will be named "EmeraldShakerTemp" - you'll need to rename it to "EmeraldShakerApp":
 
-1. Open `ios/BevvyTemp.xcworkspace` in Xcode
+1. Open `ios/EmeraldShakerTemp.xcworkspace` in Xcode
 2. Select the project in the navigator
-3. Change the project name from "BevvyTemp" to "bevvy-app"
+3. Change the project name from "EmeraldShakerTemp" to "EmeraldShakerApp"
 4. Update the scheme name
 5. Update the Podfile target name to match
 
 Or manually:
-- Rename `ios/BevvyTemp.xcodeproj` to `ios/bevvy-app.xcodeproj`
+- Rename `ios/EmeraldShakerTemp.xcodeproj` to `ios/EmeraldShakerApp.xcodeproj`
 - Update references in the Podfile
 - Update `app.json` if needed
 

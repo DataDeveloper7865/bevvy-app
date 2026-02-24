@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Setup script for Bevvy React Native app
+# Setup script for Emerald Shaker React Native app
 # This script helps set up the React Native project structure
 
 set -e
 
-echo "🍹 Setting up Bevvy Cocktail App..."
+echo "🍹 Setting up Emerald Shaker Cocktail App..."
 echo ""
 
 # Check if node_modules exists
@@ -17,15 +17,15 @@ else
 fi
 
 # Check if iOS folder exists and has proper structure
-if [ ! -d "ios" ] || [ ! -f "ios/bevvy-app.xcworkspace" ]; then
+if [ ! -d "ios" ] || [ ! -f "ios/EmeraldShakerApp.xcworkspace" ]; then
     echo ""
     echo "⚠️  iOS project structure not found."
     echo "   You need to initialize a React Native project first."
     echo ""
     echo "   Run this command in a temporary directory:"
-    echo "   npx @react-native-community/cli@latest init BevvyTemp"
+    echo "   npx @react-native-community/cli@latest init EmeraldShakerTemp"
     echo ""
-    echo "   Then copy the ios/ folder from BevvyTemp to this directory."
+    echo "   Then copy the ios/ folder from EmeraldShakerTemp to this directory."
     echo "   Update ios/Podfile and project settings as needed."
     echo ""
     read -p "Press enter to continue or Ctrl+C to exit..."

@@ -54,6 +54,16 @@ const CocktailDetail: React.FC<CocktailDetailProps> = ({
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Food Pairings</Text>
+          {cocktail.foodPairings.map((pairing, index) => (
+            <View key={index} style={styles.ingredientItem}>
+              <View style={styles.bullet} />
+              <Text style={styles.ingredientText}>{pairing}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Instructions</Text>
           <Text style={styles.instructionsText}>{cocktail.instructions}</Text>
         </View>
@@ -163,4 +173,3 @@ const styles = StyleSheet.create({
 });
 
 export default CocktailDetail;
-

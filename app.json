@@ -1,5 +1,7 @@
 {
-  "name": "BevvyApp",
-  "displayName": "Bevvy"
+  "name": "EmeraldShakerApp",
+  "displayName": "Emerald Shaker",
+  "react-native-google-mobile-ads": {
+    "ios_app_id": "ca-app-pub-2102675857529902~2077880290"
+  }
 }
-
